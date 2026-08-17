@@ -1,5 +1,5 @@
 def main():
-    print("Hello from agentic-design-patterns!")
+    print("Hello from Agentic Design Patterns course!")
 
 
 if __name__ == "__main__":
