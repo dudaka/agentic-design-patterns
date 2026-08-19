@@ -66,7 +66,7 @@ Open any notebook in `notebooks/`, for example `notebooks/chapter-1.ipynb`.
 
 ### 10. Select the kernel
 
-Click "Select Kernel" and choose the kernel named `agentic-design-patterns`, then accept any following prompt.
+Click "Select Kernel" and choose the kernel named `agentic-design-patterns` or the kernel directory (`.venv/bin/python` - Mac/Linux or `.venv\Scripts\python.exe` - Windows), then accept any following prompt.
 
 ### 11. Run the notebook
 
