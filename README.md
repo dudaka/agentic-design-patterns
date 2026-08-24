@@ -2,6 +2,25 @@
 
 Notebooks for the Agentic Design Patterns course.
 
+## Textbook
+
+The examples in these notebooks are adapted from:
+
+> Gullí, A. (2025). *Agentic Design Patterns: A Hands-On Guide to Building Intelligent Systems*. Springer Nature Switzerland, Cham. ISBN 978-3-032-01401-6 (print), 978-3-032-01402-3 (eBook). https://doi.org/10.1007/978-3-032-01402-3
+
+| Notebook | Chapter | Pattern |
+| --- | --- | --- |
+| `notebooks/chapter-1.ipynb` | 1 | Prompt Chaining |
+| `notebooks/chapter-2.ipynb` | 2 | Routing |
+| `notebooks/chapter-3.ipynb` | 3 | Parallelization |
+| `notebooks/chapter-4.ipynb` | 4 | Reflection |
+
+The LangChain and Google ADK listings in chapters 2-4 are by Marco Fago and are used under the MIT License, as stated in the notebook headers.
+
+The notebooks adapt the book's listings to run in Jupyter against current library versions: `asyncio.run(...)` becomes a top-level `await`, `create_session` is awaited, retired model names are updated, and the deprecated `SequentialAgent` / `ParallelAgent` examples are paired with a `Workflow` version. Some notebooks add an Ollama version of the same example.
+
+The book itself is not included in this repository.
+
 ## Run the notebooks locally
 
 ### 1. Install git
