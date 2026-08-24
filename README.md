@@ -82,6 +82,22 @@ Click "Select Kernel" and choose the kernel named `agentic-design-patterns` or t
 
 Run the cells from top to bottom.
 
+## Run the examples on a local model with Ollama
+
+Some notebooks include an extra cell that runs the same example on a local model instead of a hosted API, so no API key is needed for those cells.
+
+1. Install Ollama from https://ollama.com and make sure it is running.
+2. Pull the models the notebooks use:
+
+```bash
+ollama pull llama3.1:8b
+ollama pull qwen2.5:7b
+```
+
+3. Run the cell marked "running on a local model served by Ollama".
+
+The Google ADK examples reach Ollama through LiteLLM, using the `ollama_chat` provider. They need a model that is good at tool calling, so they use `qwen2.5:7b`; smaller models often mis-route the delegation.
+
 ## Google Colab notebooks
 
 - Chapter 1: https://colab.research.google.com/drive/1-balOSStw7ASvldaOg8gqhpa4qFWDuEI?usp=sharing
