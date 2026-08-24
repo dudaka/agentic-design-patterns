@@ -43,14 +43,23 @@ uv self update
 uv sync
 ```
 
-### 7. Create an OpenAI API key
+### 7. Create the API keys
+
+The notebooks use two providers: OpenAI for the LangChain examples, and Google for the Gemini and Google ADK examples. Create both keys.
+
+**OpenAI**
 
 1. Go to https://platform.openai.com and log in (create an account if you don't have one).
 2. Create a project, add $5 credit, and create an API key.
 
+**Google**
+
+1. Go to https://aistudio.google.com/apikey and log in with a Google account.
+2. Click "Create API key". The free tier is enough to run the notebooks.
+
 ### 8. Create a `.env` file
 
-Copy `.env-template` to `.env` and put your API key there:
+Copy `.env-template` to `.env` and put your keys there:
 
 ```bash
 cp .env-template .env
@@ -58,6 +67,7 @@ cp .env-template .env
 
 ```
 OPENAI_API_KEY=sk-proj-...
+GOOGLE_API_KEY=AIza...
 ```
 
 ### 9. Open a notebook
