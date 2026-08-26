@@ -14,10 +14,22 @@ The examples in these notebooks are adapted from:
 | `notebooks/chapter-2.ipynb` | 2 | Routing |
 | `notebooks/chapter-3.ipynb` | 3 | Parallelization |
 | `notebooks/chapter-4.ipynb` | 4 | Reflection |
+| `notebooks/chapter-5.ipynb` | 5 | Tool Use (Function Calling) |
+| `notebooks/chapter-6.ipynb` | 6 | Planning |
+
+Each pattern is shown in more than one framework: LangChain, Google ADK, and CrewAI.
 
 The LangChain and Google ADK listings in chapters 2-4 are by Marco Fago and are used under the MIT License, as stated in the notebook headers.
 
-The notebooks adapt the book's listings to run in Jupyter against current library versions: `asyncio.run(...)` becomes a top-level `await`, `create_session` is awaited, retired model names are updated, and the deprecated `SequentialAgent` / `ParallelAgent` examples are paired with a `Workflow` version. Some notebooks add an Ollama version of the same example.
+The notebooks adapt the book's listings to run in Jupyter against current library versions:
+
+- `asyncio.run(...)`, `if __name__ == "__main__":` blocks, and `nest_asyncio` become a top-level `await`.
+- ADK's `create_session` is awaited, and CrewAI's `kickoff()` becomes `await kickoff_async()`, because the sync entry points refuse to run inside the notebook's event loop.
+- Retired model names are updated.
+- The deprecated `SequentialAgent` / `ParallelAgent` examples are paired with a `Workflow` version.
+- LangChain's removed `AgentExecutor` / `create_tool_calling_agent` become `create_agent`, and CrewAI takes its own `LLM` object instead of a LangChain chat model.
+
+Some notebooks add an Ollama version of the same example.
 
 The book itself is not included in this repository.
 
@@ -64,7 +76,7 @@ uv sync
 
 ### 7. Create the API keys
 
-The notebooks use two providers: OpenAI for the LangChain examples, and Google for the Gemini and Google ADK examples. Create both keys.
+The notebooks use two providers: OpenAI for the LangChain and CrewAI examples, and Google for the Gemini and Google ADK examples. Create both keys.
 
 **OpenAI**
 
@@ -113,9 +125,18 @@ ollama pull llama3.1:8b
 ollama pull qwen2.5:7b
 ```
 
-3. Run the cell marked "running on a local model served by Ollama".
+3. Run the cell marked "running on a local model served by Ollama". Chapters 1, 2, 5, and 6 have one.
 
-The Google ADK examples reach Ollama through LiteLLM, using the `ollama_chat` provider. They need a model that is good at tool calling, so they use `qwen2.5:7b`; smaller models often mis-route the delegation.
+Google ADK and CrewAI both reach Ollama through LiteLLM, so the model name carries a provider prefix: `ollama_chat/` for ADK, where it is the prefix that handles tool calling correctly, and `ollama/` for CrewAI. LangChain uses `ChatOllama` and no prefix.
+
+Most cells work on any of the pulled models, but the ADK routing example in chapter 2 needs a model that is good at tool calling, so it uses `qwen2.5:7b`; `llama3.1:8b` writes `transfer_to_agent(...)` as plain text instead of calling it, and the delegation fails.
+
+## Cells that need more than an API key
+
+Two cells cannot simply be run in class:
+
+- **Chapter 5, Vertex AI Search.** Vertex AI Search is a Google Cloud service and does not accept an AI Studio `GOOGLE_API_KEY`. It needs a Google Cloud project, a data store filled with your own documents, `GOOGLE_GENAI_USE_VERTEXAI=TRUE`, `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION`, `DATASTORE_ID`, and `gcloud auth application-default login`. Without them the cell prints the missing settings and skips, so it is safe to run.
+- **Chapter 6, OpenAI Deep Research.** This one makes a real research run: many web searches over several minutes, costing dollars rather than cents. It defaults to the cheaper `o4-mini-deep-research`; the book uses `o3-deep-research`.
 
 ## Google Colab notebooks
 
