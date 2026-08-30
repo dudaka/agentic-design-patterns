@@ -13,3 +13,7 @@ references/
 
 # macOS
 .DS_Store
+
+.obsidian/
+CLAUDE.md
+.claude/

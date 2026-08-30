@@ -16,6 +16,7 @@ The examples in these notebooks are adapted from:
 | `notebooks/chapter-4.ipynb` | 4 | Reflection |
 | `notebooks/chapter-5.ipynb` | 5 | Tool Use (Function Calling) |
 | `notebooks/chapter-6.ipynb` | 6 | Planning |
+| `notebooks/chapter-7.ipynb` | 7 | Multi-Agent Collaboration |
 
 Each pattern is shown in more than one framework: LangChain, Google ADK, and CrewAI.
 
@@ -26,7 +27,8 @@ The notebooks adapt the book's listings to run in Jupyter against current librar
 - `asyncio.run(...)`, `if __name__ == "__main__":` blocks, and `nest_asyncio` become a top-level `await`.
 - ADK's `create_session` is awaited, and CrewAI's `kickoff()` becomes `await kickoff_async()`, because the sync entry points refuse to run inside the notebook's event loop.
 - Retired model names are updated.
-- The deprecated `SequentialAgent` / `ParallelAgent` examples are paired with a `Workflow` version.
+- Deprecated ADK APIs are kept and paired with a current version rather than replaced: `SequentialAgent`, `ParallelAgent` and `LoopAgent` alongside `Workflow` (chapters 3, 4 and 7), and `AgentTool` alongside `mode="single_turn"` sub-agents (chapter 7).
+- Listings that only define agents, or leave the runner commented out as a "conceptual example", gain the runner and `await` needed to actually run them.
 - LangChain's removed `AgentExecutor` / `create_tool_calling_agent` become `create_agent`, and CrewAI takes its own `LLM` object instead of a LangChain chat model.
 
 Some notebooks add an Ollama version of the same example.
