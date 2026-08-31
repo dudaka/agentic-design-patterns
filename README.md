@@ -127,7 +127,7 @@ ollama pull llama3.1:8b
 ollama pull qwen2.5:7b
 ```
 
-3. Run the cell marked "running on a local model served by Ollama". Chapters 1, 2, 5, and 6 have one.
+3. Run the cell marked "running on a local model served by Ollama". Chapters 1-6 have one below each example.
 
 Google ADK and CrewAI both reach Ollama through LiteLLM, so the model name carries a provider prefix: `ollama_chat/` for ADK, where it is the prefix that handles tool calling correctly, and `ollama/` for CrewAI. LangChain uses `ChatOllama` and no prefix.
 
