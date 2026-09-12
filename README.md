@@ -10,15 +10,16 @@ The examples in these notebooks are adapted from:
 
 | Notebook | Chapter | Pattern |
 | --- | --- | --- |
-| `notebooks/chapter-1.ipynb` | 1 | Prompt Chaining |
-| `notebooks/chapter-2.ipynb` | 2 | Routing |
-| `notebooks/chapter-3.ipynb` | 3 | Parallelization |
-| `notebooks/chapter-4.ipynb` | 4 | Reflection |
-| `notebooks/chapter-5.ipynb` | 5 | Tool Use (Function Calling) |
-| `notebooks/chapter-6.ipynb` | 6 | Planning |
-| `notebooks/chapter-7.ipynb` | 7 | Multi-Agent Collaboration |
+| [`notebooks/chapter-1.ipynb`](notebooks/chapter-1.ipynb) | 1 | Prompt Chaining |
+| [`notebooks/chapter-2.ipynb`](notebooks/chapter-2.ipynb) | 2 | Routing |
+| [`notebooks/chapter-3.ipynb`](notebooks/chapter-3.ipynb) | 3 | Parallelization |
+| [`notebooks/chapter-4.ipynb`](notebooks/chapter-4.ipynb) | 4 | Reflection |
+| [`notebooks/chapter-5.ipynb`](notebooks/chapter-5.ipynb) | 5 | Tool Use (Function Calling) |
+| [`notebooks/chapter-6.ipynb`](notebooks/chapter-6.ipynb) | 6 | Planning |
+| [`notebooks/chapter-7.ipynb`](notebooks/chapter-7.ipynb) | 7 | Multi-Agent Collaboration |
+| [`notebooks/chapter-8.ipynb`](notebooks/chapter-8.ipynb) | 8 | Memory Management |
 
-Each pattern is shown in more than one framework: LangChain, Google ADK, and CrewAI.
+Each pattern is shown in more than one framework: LangChain, Google ADK, and CrewAI. Chapter 8 adds LangGraph.
 
 The LangChain and Google ADK listings in chapters 2-4 are by Marco Fago and are used under the MIT License, as stated in the notebook headers.
 
@@ -30,6 +31,8 @@ The notebooks adapt the book's listings to run in Jupyter against current librar
 - Deprecated ADK APIs are kept and paired with a current version rather than replaced: `SequentialAgent`, `ParallelAgent` and `LoopAgent` alongside `Workflow` (chapters 3, 4 and 7), and `AgentTool` alongside `mode="single_turn"` sub-agents (chapter 7).
 - Listings that only define agents, or leave the runner commented out as a "conceptual example", gain the runner and `await` needed to actually run them.
 - LangChain's removed `AgentExecutor` / `create_tool_calling_agent` become `create_agent`, and CrewAI takes its own `LLM` object instead of a LangChain chat model.
+- LangChain's removed `langchain.memory` and `langchain.chains` (chapter 8): `ChatMessageHistory` becomes `langchain_core`'s `InMemoryChatMessageHistory`, and `LLMChain` + `ConversationBufferMemory` become a `prompt | llm` chain with the history read and saved explicitly.
+- The book's pseudo-code for procedural memory in LangGraph (chapter 8) is completed into a graph that runs.
 
 Some notebooks add an Ollama version of the same example.
 
@@ -105,7 +108,7 @@ GOOGLE_API_KEY=AIza...
 
 ### 9. Open a notebook
 
-Open any notebook in `notebooks/`, for example `notebooks/chapter-1.ipynb`.
+Open any notebook in `notebooks/`, for example [`notebooks/chapter-1.ipynb`](notebooks/chapter-1.ipynb).
 
 ### 10. Select the kernel
 
@@ -127,7 +130,7 @@ ollama pull llama3.1:8b
 ollama pull qwen2.5:7b
 ```
 
-3. Run the cell marked "running on a local model served by Ollama". Chapters 1-6 have one below each example.
+3. Run the cell marked "running on a local model served by Ollama". Chapters 1-8 have one below each example that calls a hosted model.
 
 Google ADK and CrewAI both reach Ollama through LiteLLM, so the model name carries a provider prefix: `ollama_chat/` for ADK, where it is the prefix that handles tool calling correctly, and `ollama/` for CrewAI. LangChain uses `ChatOllama` and no prefix.
 
@@ -135,10 +138,11 @@ Most cells work on any of the pulled models, but the ADK routing example in chap
 
 ## Cells that need more than an API key
 
-Two cells cannot simply be run in class:
+Some cells cannot simply be run in class:
 
 - **Chapter 5, Vertex AI Search.** Vertex AI Search is a Google Cloud service and does not accept an AI Studio `GOOGLE_API_KEY`. It needs a Google Cloud project, a data store filled with your own documents, `GOOGLE_GENAI_USE_VERTEXAI=TRUE`, `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION`, `DATASTORE_ID`, and `gcloud auth application-default login`. Without them the cell prints the missing settings and skips, so it is safe to run.
 - **Chapter 6, OpenAI Deep Research.** This one makes a real research run: many web searches over several minutes, costing dollars rather than cents. It defaults to the cheaper `o4-mini-deep-research`; the book uses `o3-deep-research`.
+- **Chapter 8, database and Vertex session/memory services.** The book's construct-only examples of `DatabaseSessionService`, `VertexAiSessionService` and `VertexAiRagMemoryService` are kept as written. The Vertex ones need `google-adk[gcp]` and a Google Cloud project; the database one needs the async SQLite URL (`sqlite+aiosqlite:///...`) on the current ADK. They are there to read, not to run.
 
 ## Google Colab notebooks
 
