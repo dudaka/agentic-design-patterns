@@ -20,7 +20,7 @@ The examples in these notebooks are adapted from:
 | [`notebooks/chapter-8.ipynb`](notebooks/chapter-8.ipynb) | 8 | Memory Management |
 | [`notebooks/chapter-10.ipynb`](notebooks/chapter-10.ipynb) | 10 | Model Context Protocol |
 
-Each pattern is shown in more than one framework: LangChain, Google ADK, and CrewAI. Chapter 8 adds LangGraph.
+Each pattern is shown in more than one framework: LangChain, Google ADK, and CrewAI. Chapter 8 adds LangGraph; chapter 10 is Google ADK only, since MCP support is what it demonstrates.
 
 The LangChain and Google ADK listings in chapters 2-4 are by Marco Fago and are used under the MIT License, as stated in the notebook headers.
 

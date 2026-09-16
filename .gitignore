@@ -17,3 +17,5 @@ references/
 .obsidian/
 CLAUDE.md
 .claude/
+# ADK web UI session stores
+.adk/
