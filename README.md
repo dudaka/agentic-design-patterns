@@ -18,6 +18,7 @@ The examples in these notebooks are adapted from:
 | [`notebooks/chapter-6.ipynb`](notebooks/chapter-6.ipynb) | 6 | Planning |
 | [`notebooks/chapter-7.ipynb`](notebooks/chapter-7.ipynb) | 7 | Multi-Agent Collaboration |
 | [`notebooks/chapter-8.ipynb`](notebooks/chapter-8.ipynb) | 8 | Memory Management |
+| [`notebooks/chapter-10.ipynb`](notebooks/chapter-10.ipynb) | 10 | Model Context Protocol |
 
 Each pattern is shown in more than one framework: LangChain, Google ADK, and CrewAI. Chapter 8 adds LangGraph.
 
@@ -33,6 +34,7 @@ The notebooks adapt the book's listings to run in Jupyter against current librar
 - LangChain's removed `AgentExecutor` / `create_tool_calling_agent` become `create_agent`, and CrewAI takes its own `LLM` object instead of a LangChain chat model.
 - LangChain's removed `langchain.memory` and `langchain.chains` (chapter 8): `ChatMessageHistory` becomes `langchain_core`'s `InMemoryChatMessageHistory`, and `LLMChain` + `ConversationBufferMemory` become a `prompt | llm` chain with the history read and saved explicitly.
 - The book's pseudo-code for procedural memory in LangGraph (chapter 8) is completed into a graph that runs.
+- The MCP examples (chapter 10) use `McpToolset` with `StdioConnectionParams` / `StreamableHTTPConnectionParams`; the book's `HttpServerParameters` no longer exists. The `adk web` files are in `adk_agent_samples/`, and the notebook runs the same agents in-cell.
 
 Some notebooks add an Ollama version of the same example.
 
@@ -130,11 +132,27 @@ ollama pull llama3.1:8b
 ollama pull qwen2.5:7b
 ```
 
-3. Run the cell marked "running on a local model served by Ollama". Chapters 1-8 have one below each example that calls a hosted model.
+3. Run the cell marked "running on a local model served by Ollama". Chapters 1-8 and 10 have one below each example that calls a hosted model.
 
 Google ADK and CrewAI both reach Ollama through LiteLLM, so the model name carries a provider prefix: `ollama_chat/` for ADK, where it is the prefix that handles tool calling correctly, and `ollama/` for CrewAI. LangChain uses `ChatOllama` and no prefix.
 
 Most cells work on any of the pulled models, but the ADK routing example in chapter 2 needs a model that is good at tool calling, so it uses `qwen2.5:7b`; `llama3.1:8b` writes `transfer_to_agent(...)` as plain text instead of calling it, and the delegation fails.
+
+## Chapter 10 needs Node.js
+
+The MCP filesystem example starts `@modelcontextprotocol/server-filesystem` with `npx`, so Node.js must be installed (https://nodejs.org). The first run downloads the server package. To run the examples the book's way, with the ADK web UI:
+
+```bash
+cd adk_agent_samples
+uv run adk web            # example 1: pick mcp_agent
+```
+
+For example 2 start the server first, then the UI on another port — both default to 8000:
+
+```bash
+uv run python adk_agent_samples/fastmcp_server.py     # terminal 1
+cd adk_agent_samples && uv run adk web --port 8080     # terminal 2: pick fastmcp_client_agent
+```
 
 ## Cells that need more than an API key
 
