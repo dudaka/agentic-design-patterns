@@ -19,3 +19,6 @@ CLAUDE.md
 .claude/
 # ADK web UI session stores
 .adk/
+
+# Chapter 11 writes the agent's finished program here
+notebooks/generated/

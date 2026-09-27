@@ -19,14 +19,15 @@ The examples in these notebooks are adapted from:
 | [`notebooks/chapter-7.ipynb`](notebooks/chapter-7.ipynb) | 7 | Multi-Agent Collaboration |
 | [`notebooks/chapter-8.ipynb`](notebooks/chapter-8.ipynb) | 8 | Memory Management |
 | [`notebooks/chapter-10.ipynb`](notebooks/chapter-10.ipynb) | 10 | Model Context Protocol |
+| [`notebooks/chapter-11.ipynb`](notebooks/chapter-11.ipynb) | 11 | Goal Setting and Monitoring |
 
-Each pattern is shown in more than one framework: LangChain, Google ADK, and CrewAI. Chapter 8 adds LangGraph; chapter 10 is Google ADK only, since MCP support is what it demonstrates.
+Each pattern is shown in more than one framework: LangChain, Google ADK, and CrewAI. Chapter 8 adds LangGraph. Two chapters use a single framework because the framework is the subject: chapter 10 is Google ADK only, since MCP support is what it demonstrates, and chapter 11 is LangChain only.
 
-The LangChain and Google ADK listings in chapters 2-4 are by Marco Fago and are used under the MIT License, as stated in the notebook headers.
+The LangChain and Google ADK listings in chapters 2-4 are by Marco Fago, and chapter 11's is by Mahtab Syed; both are used under the MIT License, as stated in the notebook headers.
 
 The notebooks adapt the book's listings to run in Jupyter against current library versions:
 
-- `asyncio.run(...)`, `if __name__ == "__main__":` blocks, and `nest_asyncio` become a top-level `await`.
+- `asyncio.run(...)` and `nest_asyncio` become a top-level `await`, and `if __name__ == "__main__":` blocks become a direct call — a notebook is already `__main__`, so the guard only hides the entry point.
 - ADK's `create_session` is awaited, and CrewAI's `kickoff()` becomes `await kickoff_async()`, because the sync entry points refuse to run inside the notebook's event loop.
 - Retired model names are updated.
 - Deprecated ADK APIs are kept and paired with a current version rather than replaced: `SequentialAgent`, `ParallelAgent` and `LoopAgent` alongside `Workflow` (chapters 3, 4 and 7), and `AgentTool` alongside `mode="single_turn"` sub-agents (chapter 7).
@@ -35,6 +36,7 @@ The notebooks adapt the book's listings to run in Jupyter against current librar
 - LangChain's removed `langchain.memory` and `langchain.chains` (chapter 8): `ChatMessageHistory` becomes `langchain_core`'s `InMemoryChatMessageHistory`, and `LLMChain` + `ConversationBufferMemory` become a `prompt | llm` chain with the history read and saved explicitly.
 - The book's pseudo-code for procedural memory in LangGraph (chapter 8) is completed into a graph that runs.
 - The MCP examples (chapter 10) use `McpToolset` with `StdioConnectionParams` / `StreamableHTTPConnectionParams`; the book's `HttpServerParameters` no longer exists. The `adk web` files are in `adk_agent_samples/`, and the notebook runs the same agents in-cell.
+- Chapter 11's coding agent writes its finished program to `notebooks/generated/` rather than the working directory, so a run does not leave a `.py` file in the repository.
 
 Some notebooks add an Ollama version of the same example.
 
@@ -132,7 +134,7 @@ ollama pull llama3.1:8b
 ollama pull qwen2.5:7b
 ```
 
-3. Run the cell marked "running on a local model served by Ollama". Chapters 1-8 and 10 have one below each example that calls a hosted model.
+3. Run the cell marked "running on a local model served by Ollama". Chapters 1-8, 10 and 11 have one below each example that calls a hosted model.
 
 Google ADK and CrewAI both reach Ollama through LiteLLM, so the model name carries a provider prefix: `ollama_chat/` for ADK, where it is the prefix that handles tool calling correctly, and `ollama/` for CrewAI. LangChain uses `ChatOllama` and no prefix.
 
