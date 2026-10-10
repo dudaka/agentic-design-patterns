@@ -1,0 +1,105 @@
+# Scaled-down reproduction of the paper's TSP-GLS heuristic-design run (EoH benchmark, paper Table 4).
+# Paper (Qwen3-Coder-30B): 10 islands, 152 epochs, init_pop 10, depth 3, 2 inspirations, 60 s timeout, 2 GB,
+# CVT-MAP-Elites on (fitness, eval_time). Here: 2 islands, 20 epochs, init_pop 5; everything else matches.
+# SYS_MSG is the paper's prompt verbatim (companion repo, experiments/eoh-problems/tsp_gls/qwen).
+SYS_MSG: "# PROMPT-BLOCK-START\nYou are an expert in combinatorial optimization, metaheuristics, and the Travelling\
+  \ Salesman Problem (TSP).\nYour mission is to design a novel and high-performing edge distance update strategy\
+  \ for\nGuided Local Search (GLS) applied to TSP.\n\nPROBLEM CONTEXT:\n- **Task**: Design a function that updates\
+  \ the edge distance matrix to guide the local\n  search away from the current local optimum. The GLS framework\
+  \ iteratively applies 2-opt\n  and relocate local search operators, using your modified distance matrix to escape\
+  \ local\n  optima and explore new regions of the solution space.\n- **Function signature**: `update_edge_distance(edge_distance,\
+  \ local_opt_tour, edge_n_used) -> updated_edge_distance`\n- **Inputs**:\n  * `edge_distance` (np.ndarray, shape\
+  \ (n, n)): The original symmetric distance matrix between cities.\n  * `local_opt_tour` (np.ndarray): Array of\
+  \ node IDs representing the current locally optimal tour.\n  * `edge_n_used` (np.ndarray, shape (n, n)): Matrix\
+  \ counting how many times each edge has been\n    used during past perturbation steps (penalty history).\n- **Output**:\n\
+  \  * `updated_edge_distance` (np.ndarray, shape (n, n)): The modified distance matrix used by\n    the local search\
+  \ operators. By increasing distances on frequently-used or tour edges,\n    the search is encouraged to explore\
+  \ different tour structures.\n- **TSP setup**:\n  * 64 TSP instances with 100 cities each (TSP100).\n  * City\
+  \ coordinates randomly sampled from [0, 1]^2.\n  * Optimal tour costs are known (computed by Concorde).\n  * During\
+  \ evolution, 3 instances are used for evaluation (for speed).\n  * GLS runs for up to 10 seconds per instance\
+  \ with max 1000 iterations.\n\nEVALUATION:\n- **Fitness** (maximize): Negative of the average gap (%) to the optimal\
+  \ tour cost.\n  A fitness of 0.0 means optimal tours are found on all evaluation instances.\n  Higher values (closer\
+  \ to 0) are better.\n- **avg_gap_pct**: Average percentage gap to optimal across instances (lower is better).\n\
+  - **eval_time**: Total execution time in seconds across all instances.\n\nCOMPUTATIONAL RESOURCES & IMPLEMENTATION\
+  \ GUIDELINES:\n**Core packages**: numpy\n- The function is called once per GLS iteration (up to 1000 times per\
+  \ instance).\n- Avoid expensive operations; prefer vectorized NumPy operations.\n- The function should be deterministic\
+  \ for reproducibility.\n- The output matrix need not be symmetric, but keeping it symmetric is recommended.\n\n\
+  DESIGN TIPS:\n- The classic GLS approach: penalize edges on the current tour proportionally to their\n  cost and\
+  \ inversely to how often they've been penalized. This is the Voudouris & Tsang formulation.\n- Consider using\
+  \ edge_n_used to track historical penalties and avoid over-penalizing.\n- Non-linear transformations of the penalty\
+  \ (e.g., logarithmic, square root) can be effective.\n- Combining distance, tour membership, and penalty history\
+  \ in novel ways can yield strong results.\n- The function should make meaningful modifications; returning the\
+  \ original matrix unchanged\n  will cause the search to stagnate.\n\nCOMPUTATIONAL BUDGET:\n- **Time limit**:\
+  \ 60 seconds maximum total execution time.\n- **Memory limit**: 2 GB.\n\nKNOWN BASELINES:\n- Standard GLS with\
+  \ linear penalty: ~0.1-0.5% gap to optimal on TSP100.\n- State-of-the-art EoH heuristics: ~0.00% gap on many TSP100\
+  \ instances.\n# PROMPT-BLOCK-END\n"
+CODEBASE_PATH: src/
+INIT_FILE_DATA:
+  filename: init_program.py
+  language: python
+EVAL_FILE_NAME: evaluate.py
+BUDGET_CONFIG:
+  eval_timeout: 60
+  max_mem_bytes: 2000000000
+  resource_check_interval_s: 0.1
+EVOLVE_CONFIG:
+  fitness_key: fitness
+  num_epochs: 20
+  ckpt: 5
+  max_size: null
+  init_pop: 5
+  exploration_rate: 0.2
+  selection:
+    policy: roulette
+    kwargs:
+      roulette_by_rank: true
+  early_stopping_rounds: null
+  num_islands: 2
+  migration:
+    topology: ring
+    interval: 10
+    rate: 0.1
+  meta_prompting: true
+  use_map_elites: true
+  num_inspirations: 2
+  max_chat_depth: 3
+  exploration_scheduler:
+    type: PlateauScheduler
+    kwargs:
+      min_value: 0.2
+      max_value: 0.5
+      plateau_threshold: 5
+      increase_factor: 1.05
+      decrease_factor: 0.95
+EXPLORATION_ENSEMBLE:
+- model_name: qwen3-coder:30b
+  temp: 0.7
+  top_p: 0.8
+  retries: 3
+  weight: 1
+EXPLOITATION_ENSEMBLE:
+- model_name: qwen3-coder:30b
+  temp: 0.7
+  top_p: 0.8
+  retries: 3
+  weight: 1
+SAMPLER_AUX_LM:
+  model_name: qwen3-coder:30b
+  temp: 0.7
+  top_p: 0.8
+  retries: 3
+  weight: 1
+MAP_ELITES:
+  elite_map_type: cvt
+  elite_map_kwargs:
+    num_centroids: 20
+    num_init_samples: 1000
+    max_iter: 300
+    tolerance: 0.0001
+  features:
+  - name: fitness
+    min_val: -10.0
+    max_val: 0.0
+  - name: eval_time
+    min_val: 0
+    max_val: 60

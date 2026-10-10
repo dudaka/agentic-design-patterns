@@ -3,8 +3,9 @@ name = "agentic-design-patterns"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.13.5"
 dependencies = [
+    "codeevolve",
     "crewai>=1.15.17",
     "dotenv>=0.9.9",
     "fastmcp>=3.4.7",
@@ -14,5 +15,14 @@ dependencies = [
     "langchain-google-genai>=4.3.4",
     "langchain-ollama>=1.1.0",
     "langchain-openai>=1.5.1",
+    "numba>=0.68.0",
     "openevolve>=0.3.2",
+]
+
+[tool.uv.sources]
+codeevolve = { git = "https://github.com/inter-co/science-codeevolve.git", rev = "c077959e1ab24b060aaa6d4c563bca2e9cbe8617" }
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.4.0",
 ]

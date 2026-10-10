@@ -18,12 +18,13 @@ The examples in these notebooks are adapted from:
 | [`notebooks/chapter-6.ipynb`](notebooks/chapter-6.ipynb) | 6 | Planning |
 | [`notebooks/chapter-7.ipynb`](notebooks/chapter-7.ipynb) | 7 | Multi-Agent Collaboration |
 | [`notebooks/chapter-8.ipynb`](notebooks/chapter-8.ipynb) | 8 | Memory Management |
+| [`notebooks/chapter-9-codeevolve.ipynb`](notebooks/chapter-9-codeevolve.ipynb) | 9 | Learning and Adaptation (CodeEvolve) |
 | [`notebooks/chapter-10.ipynb`](notebooks/chapter-10.ipynb) | 10 | Model Context Protocol |
 | [`notebooks/chapter-11.ipynb`](notebooks/chapter-11.ipynb) | 11 | Goal Setting and Monitoring |
 | [`notebooks/chapter-12.ipynb`](notebooks/chapter-12.ipynb) | 12 | Exception Handling and Recovery |
 | [`notebooks/chapter-13.ipynb`](notebooks/chapter-13.ipynb) | 13 | Human-in-the-Loop |
 
-Each pattern is shown in more than one framework: LangChain, Google ADK, and CrewAI. Chapter 8 adds LangGraph. Two chapters use a single framework because the framework is the subject: chapter 10 is Google ADK only, since MCP support is what it demonstrates, and chapter 11 is LangChain only. Chapters 12 and 13 are Google ADK only because the book gives only an ADK listing.
+Each pattern is shown in more than one framework: LangChain, Google ADK, and CrewAI. Chapter 8 adds LangGraph. Chapter 9 shows the pattern with CodeEvolve, an open-source evolutionary coding agent from the same family as the book's AlphaEvolve and OpenEvolve, evolving a TSP heuristic. Two chapters use a single framework because the framework is the subject: chapter 10 is Google ADK only, since MCP support is what it demonstrates, and chapter 11 is LangChain only. Chapters 12 and 13 are Google ADK only because the book gives only an ADK listing.
 
 The LangChain and Google ADK listings in chapters 2-4 are by Marco Fago, and chapter 11's is by Mahtab Syed; both are used under the MIT License, as stated in the notebook headers.
 
@@ -87,6 +88,8 @@ uv self update
 uv sync
 ```
 
+The project uses Python 3.13; `uv sync` downloads it if needed. If you cloned the repository before it moved from 3.12, run `uv sync` again after pulling, then re-select the kernel in VSCode/Cursor so it points at the rebuilt `.venv`.
+
 ### 7. Create the API keys
 
 The notebooks use two providers: OpenAI for the LangChain and CrewAI examples, and Google for the Gemini and Google ADK examples. Create both keys.
@@ -145,6 +148,10 @@ In chapters 11-13 the Ollama cells do not depend on the hosted cells: run the se
 Google ADK and CrewAI both reach Ollama through LiteLLM, so the model name carries a provider prefix: `ollama_chat/` for ADK, where it is the prefix that handles tool calling correctly, and `ollama/` for CrewAI. LangChain uses `ChatOllama` and no prefix.
 
 Most cells work on any of the pulled models, but the ADK routing example in chapter 2 needs a model that is good at tool calling, so it uses `qwen2.5:7b`; `llama3.1:8b` writes `transfer_to_agent(...)` as plain text instead of calling it, and the delegation fails.
+
+## Chapter 9 runs CodeEvolve
+
+The CodeEvolve notebook needs nothing beyond `uv sync`: CodeEvolve is a dependency of this repository, which is why the project uses Python 3.13, and the TSP problem, run configuration and test data it evolves against are in `notebooks/chapter-9-codeevolve/` (sources and licences in `NOTICE.md` there). The hosted run uses `gpt-4.1-mini` (a few cents); the Ollama run needs `ollama pull qwen3-coder:30b` (19 GB), the paper's own open-weight model. Runs write under `notebooks/generated/codeevolve/` (gitignored).
 
 ## Chapter 10 needs Node.js
 

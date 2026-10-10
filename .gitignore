@@ -22,3 +22,6 @@ CLAUDE.md
 
 # Chapter 11 writes the agent's finished program here
 notebooks/generated/
+
+# Chapter 9 builds this held-out set from the training data on first run
+notebooks/chapter-9-codeevolve/tsp_testing/TSP100.pkl
