@@ -92,7 +92,7 @@ uv self update
 uv sync
 ```
 
-The project uses Python 3.13; `uv sync` downloads it if needed. If you cloned the repository before it moved from 3.12, run `uv sync` again after pulling, then re-select the kernel in VSCode/Cursor so it points at the rebuilt `.venv`.
+The project uses Python 3.13; `uv sync` downloads it if needed. Run `uv sync` again every time you pull, then restart the kernel: new chapters add dependencies (chapter 14 needs `langchain-text-splitters`, chapter 15 the A2A SDK), and a stale environment fails with `No module named ...`. If you cloned the repository before it moved from 3.12, also re-select the kernel in VSCode/Cursor so it points at the rebuilt `.venv`.
 
 ### 7. Create the API keys
 
@@ -143,7 +143,7 @@ Some notebooks include an extra cell that runs the same example on a local model
 ```bash
 ollama pull llama3.1:8b
 ollama pull qwen2.5:7b
-ollama pull nomic-embed-text   # chapter 14's embeddings
+ollama pull nomic-embed-text   # chapter 14 only
 ```
 
 3. Run the cell marked "running on a local model served by Ollama". Chapters 1-8 and 10-15 have one below each example that calls a hosted model.
@@ -152,7 +152,7 @@ In chapters 11-15 the Ollama cells do not depend on the hosted cells: run the se
 
 Google ADK and CrewAI both reach Ollama through LiteLLM, so the model name carries a provider prefix: `ollama_chat/` for ADK, where it is the prefix that handles tool calling correctly, and `ollama/` for CrewAI. LangChain uses `ChatOllama` and no prefix.
 
-Most cells work on any of the pulled models, but the ADK routing example in chapter 2 needs a model that is good at tool calling, so it uses `qwen2.5:7b`; `llama3.1:8b` writes `transfer_to_agent(...)` as plain text instead of calling it, and the delegation fails.
+`nomic-embed-text` is an embedding model, not a chat model: chapter 14's LangGraph cell uses it to turn text into vectors for retrieval, and `llama3.1:8b` to write the answer. Most chat cells work on either of the other two models, but the ADK routing example in chapter 2 needs a model that is good at tool calling, so it uses `qwen2.5:7b`; `llama3.1:8b` writes `transfer_to_agent(...)` as plain text instead of calling it, and the delegation fails.
 
 ## Chapter 9 runs CodeEvolve
 
