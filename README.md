@@ -25,8 +25,9 @@ The examples in these notebooks are adapted from:
 | [`notebooks/chapter-13.ipynb`](notebooks/chapter-13.ipynb) | 13 | Human-in-the-Loop |
 | [`notebooks/chapter-14.ipynb`](notebooks/chapter-14.ipynb) | 14 | Knowledge Retrieval (RAG) |
 | [`notebooks/chapter-15.ipynb`](notebooks/chapter-15.ipynb) | 15 | Inter-Agent Communication (A2A) |
+| [`notebooks/chapter-16.ipynb`](notebooks/chapter-16.ipynb) | 16 | Resource-Aware Optimization |
 
-Each pattern is shown in more than one framework: LangChain, Google ADK, and CrewAI. Chapter 8 adds LangGraph. Chapter 9 shows the pattern with CodeEvolve, an open-source evolutionary coding agent from the same family as the book's AlphaEvolve and OpenEvolve, evolving a TSP heuristic. Two chapters use a single framework because the framework is the subject: chapter 10 is Google ADK only, since MCP support is what it demonstrates, and chapter 11 is LangChain only. Chapters 12 and 13 are Google ADK only because the book gives only an ADK listing. Chapter 14 shows RAG twice: Google ADK grounded on Google Search, and a retrieve-then-generate pipeline in LangChain and LangGraph. Chapter 15 is Google ADK only: an ADK agent served over the A2A protocol, called by a plain HTTP client.
+Each pattern is shown in more than one framework: LangChain, Google ADK, and CrewAI. Chapter 8 adds LangGraph. Chapter 9 shows the pattern with CodeEvolve, an open-source evolutionary coding agent from the same family as the book's AlphaEvolve and OpenEvolve, evolving a TSP heuristic. Two chapters use a single framework because the framework is the subject: chapter 10 is Google ADK only, since MCP support is what it demonstrates, and chapter 11 is LangChain only. Chapters 12 and 13 are Google ADK only because the book gives only an ADK listing. Chapter 14 shows RAG twice: Google ADK grounded on Google Search, and a retrieve-then-generate pipeline in LangChain and LangGraph. Chapter 15 is Google ADK only: an ADK agent served over the A2A protocol, called by a plain HTTP client. Chapter 16 shows three routers that send each request to a cheaper or stronger model: Google ADK, the OpenAI SDK, and OpenRouter.
 
 The LangChain and Google ADK listings in chapters 2-4 are by Marco Fago, and chapter 11's is by Mahtab Syed; both are used under the MIT License, as stated in the notebook headers.
 
@@ -46,6 +47,7 @@ The notebooks adapt the book's listings to run in Jupyter against current librar
 - Chapter 13's personalization callback is attached with `before_model_callback`, which the book never does, and adds its note with `append_instructions`: the book's `Content(role="system")` is rejected by Gemini with `400 INVALID_ARGUMENT`.
 - Chapter 14's LangChain listing uses `langchain_core`'s `InMemoryVectorStore` instead of embedded Weaviate, whose v3 client API no longer exists, and downloads its document from a raw URL: the book's link is a 404.
 - Chapter 15's A2A code targets protocol 1.0: the book's Agent Card fields, `sendTask` / `sendTaskSubscribe` methods and `A2AStarletteApplication` are from earlier versions. The book's Google Calendar toolset needs an OAuth client, so a mock calendar tool stands in for it.
+- Chapter 16's retired `gemini-2.5-pro` and `o4-mini` become `gemini-pro-latest` and `gpt-5-mini`. Google's Custom Search API is closed to new customers, so a mock search stands in when its keys are missing, and the OpenRouter example runs only with an `OPENROUTER_API_KEY`.
 
 Some notebooks add an Ollama version of the same example.
 
@@ -144,11 +146,12 @@ Some notebooks include an extra cell that runs the same example on a local model
 ollama pull llama3.1:8b
 ollama pull qwen2.5:7b
 ollama pull nomic-embed-text   # chapter 14 only
+ollama pull qwen2.5:1.5b       # chapter 16 only, the cheap model its routers pick
 ```
 
-3. Run the cell marked "running on a local model served by Ollama". Chapters 1-8 and 10-15 have one below each example that calls a hosted model.
+3. Run the cell marked "running on a local model served by Ollama". Chapters 1-8 and 10-16 have one below each example that calls a hosted model.
 
-In chapters 11-15 the Ollama cells do not depend on the hosted cells: run the setup cells and the shared cell marked "no model", then skip straight to the Ollama cell. No API key is needed. In the earlier chapters, run the hosted cell above first, because the Ollama cell reuses what it defines.
+In chapters 11-16 the Ollama cells do not depend on the hosted cells: run the setup cells and the shared cell marked "no model", then skip straight to the Ollama cell. No API key is needed. In the earlier chapters, run the hosted cell above first, because the Ollama cell reuses what it defines.
 
 Google ADK and CrewAI both reach Ollama through LiteLLM, so the model name carries a provider prefix: `ollama_chat/` for ADK, where it is the prefix that handles tool calling correctly, and `ollama/` for CrewAI. LangChain uses `ChatOllama` and no prefix.
 
